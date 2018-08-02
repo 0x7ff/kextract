@@ -10,6 +10,7 @@
 #define UNTAG_PTR(a) ((a) | UINT64_C(0xffff000000000000))
 #define KMOD_MAX_NAME (64)
 
+#pragma pack(4)
 typedef struct {
 	uint64_t next_addr;
 	int32_t  info_version;
@@ -17,6 +18,7 @@ typedef struct {
 	char     name[KMOD_MAX_NAME];
 	char     version[KMOD_MAX_NAME];
 } partial_kmod_info_64_t; /* From xnu/osfmk/mach/kmod.h */
+#pragma pack()
 
 static struct segment_command_64 *
 find_segment(struct mach_header_64 *mhp, const char *seg_name) {
@@ -41,7 +43,7 @@ find_section(struct segment_command_64 *sgp, const char *sect_name) {
 		if(!strncmp(sp->segname, sgp->segname, sizeof(sp->segname)) && !strncmp(sp->sectname, sect_name, sizeof(sp->sectname))) {
 			return sp;
 		}
-		sp++;
+		++sp;
 	}
 	return NULL;
 }
